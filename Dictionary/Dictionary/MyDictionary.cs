@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Dictionary
 {
-    class MyDictionary<TKey, TValue>
+    class MyDictionary<TKey, TValue> : IEnumerable
     {
         private Node<TKey, TValue>[] _nodes;
         private int _currentSize;
@@ -32,6 +33,11 @@ namespace Dictionary
 
         public void Remove(TKey key)
         {
+            if (!ContainsKey(key))
+            {
+                throw new Exception("This key dose not exist");
+            }
+
             for (var i = 0; i < _nodes.Length; i++)
             {
                 if (_nodes[i] == null)
@@ -63,7 +69,7 @@ namespace Dictionary
         private void Remove(TKey key, Node<TKey, TValue> node, Node<TKey, TValue> prev)
         {
             var current = node;
-           
+
             while (current != null)
             {
                 if (current.Key.Equals(key) && current.Next == null)
@@ -197,6 +203,34 @@ namespace Dictionary
             }
             current.Next = new Node<TKey, TValue>(key, data);
             Count++;
+        }
+
+        public IEnumerator<Node<TKey, TValue>> Enumerator()
+        {
+            //return Enumerator();
+            foreach (var item in _nodes)
+            {
+                yield return item;
+                if (item.Next != null)
+                {
+                    var current = item;
+                    while (current.Next != null)
+                    {
+                        current = current.Next;
+                        yield return current;
+                    }
+                }
+            }
+        }
+
+        public IEnumerator<Node<TKey, TValue>> GetEnumerator()
+        {
+            return Enumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
