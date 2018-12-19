@@ -38,32 +38,27 @@ namespace Dictionary
                 throw new Exception("This key dose not exist");
             }
 
-            for (var i = 0; i < _nodes.Length; i++)
-            {
-                if (_nodes[i] == null)
-                {
-                    continue;
-                }
+            var position = GetPosition(key);
 
-                if (_nodes[i].Key.Equals(key))
+            if (_nodes[position].Key.Equals(key))
+            {
+                if (_nodes[position].Next == null)
                 {
-                    if (_nodes[i].Next == null)
-                    {
-                        _nodes[i] = null;
-                    }
-                    else
-                    {
-                        _nodes[i] = _nodes[i].Next;
-                    }
+                    _nodes[position] = null;
                 }
                 else
                 {
-                    if (_nodes[i].Next != null)
-                    {
-                        Remove(key, _nodes[i].Next, _nodes[i]);
-                    }
+                    _nodes[position] = _nodes[position].Next;
                 }
             }
+            else
+            {
+                if (_nodes[position].Next != null)
+                {
+                    Remove(key, _nodes[position].Next, _nodes[position]);
+                }
+            }
+
         }
 
         private void Remove(TKey key, Node<TKey, TValue> node, Node<TKey, TValue> prev)
@@ -134,63 +129,38 @@ namespace Dictionary
 
         public bool ContainsKey(TKey key)
         {
-            foreach (var item in _nodes)
-            {
-                if (item == null)
-                {
-                    continue;
-                }
+            var position = GetPosition(key);
 
-                if (item.Key.Equals(key))
+            var tmp = _nodes[position];
+
+            while (tmp != null)
+            {
+                if (tmp.Key.Equals(key))
                 {
                     return true;
                 }
-
-                if (item.Next != null)
-                {
-                    if (ContainsKey(key, item.Next))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private bool ContainsKey(TKey key, Node<TKey, TValue> node)
-        {
-            var current = node;
-            if (current.Key.Equals(key))
-            {
-                return true;
+                tmp = tmp.Next;
             }
 
-            while (current.Next != null)
-            {
-                if (current.Key.Equals(key))
-                {
-                    return true;
-                }
-                current = current.Next;
-            }
             return false;
         }
 
         public void Add(TKey key, TValue data)
         {
+            var position = GetPosition(key);
             if (ContainsKey(key))
             {
                 throw new Exception("This key is not unique");
             }
 
-            if (_nodes[GetPosition(key)] == null)
+            if (_nodes[position] == null)
             {
-                _nodes[GetPosition(key)] = new Node<TKey, TValue>(key, data);
+                _nodes[position] = new Node<TKey, TValue>(key, data);
                 Count++;
             }
             else
             {
-                Add(key, data, _nodes[GetPosition(key)]);
+                Add(key, data, _nodes[position]);
             }
         }
 
@@ -216,7 +186,7 @@ namespace Dictionary
                     while (current.Next != null)
                     {
                         current = current.Next;
-                        yield return new KeyValuePair<TKey, TValue>(current.Key, current.Data); 
+                        yield return new KeyValuePair<TKey, TValue>(current.Key, current.Data);
                     }
                 }
             }
