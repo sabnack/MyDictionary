@@ -30,6 +30,58 @@ namespace Dictionary
             Count = 0;
         }
 
+        public void Remove(TKey key)
+        {
+            for (var i = 0; i < _nodes.Length; i++)
+            {
+                if (_nodes[i] == null)
+                {
+                    continue;
+                }
+
+                if (_nodes[i].Key.Equals(key))
+                {
+                    if (_nodes[i].Next == null)
+                    {
+                        _nodes[i] = null;
+                    }
+                    else
+                    {
+                        _nodes[i] = _nodes[i].Next;
+                    }
+                }
+                else
+                {
+                    if (_nodes[i].Next != null)
+                    {
+                        Remove(key, _nodes[i].Next, _nodes[i]);
+                    }
+                }
+            }
+        }
+
+        private void Remove(TKey key, Node<TKey, TValue> node, Node<TKey, TValue> prev)
+        {
+            var current = node;
+           
+            while (current != null)
+            {
+                if (current.Key.Equals(key) && current.Next == null)
+                {
+                    prev.Next = null;
+                    break;
+                }
+
+                if (current.Key.Equals(key) && current.Next != null)
+                {
+                    prev.Next = current.Next;
+                    break;
+                }
+                prev = current;
+                current = current.Next;
+            }
+        }
+
         public bool ContainsValue(TValue data)
         {
             foreach (var item in _nodes)
