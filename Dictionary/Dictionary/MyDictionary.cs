@@ -207,7 +207,6 @@ namespace Dictionary
 
         public IEnumerator<Node<TKey, TValue>> Enumerator()
         {
-            //return Enumerator();
             foreach (var item in _nodes)
             {
                 yield return item;
