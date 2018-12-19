@@ -18,7 +18,7 @@ namespace Dictionary
 
             foreach (var item in dict)
             {
-                Console.WriteLine(item.Data + " " + item.Key);
+                Console.WriteLine(item.Key + " " + item.Value);
             }
             Console.WriteLine(new string('-',30));
             Console.WriteLine(dict.Count);

@@ -205,24 +205,24 @@ namespace Dictionary
             Count++;
         }
 
-        public IEnumerator<Node<TKey, TValue>> Enumerator()
+        public IEnumerator<KeyValuePair<TKey, TValue>> Enumerator()
         {
             foreach (var item in _nodes)
             {
-                yield return item;
+                yield return new KeyValuePair<TKey, TValue>(item.Key, item.Data);
                 if (item.Next != null)
                 {
                     var current = item;
                     while (current.Next != null)
                     {
                         current = current.Next;
-                        yield return current;
+                        yield return new KeyValuePair<TKey, TValue>(current.Key, current.Data); 
                     }
                 }
             }
         }
 
-        public IEnumerator<Node<TKey, TValue>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return Enumerator();
         }
