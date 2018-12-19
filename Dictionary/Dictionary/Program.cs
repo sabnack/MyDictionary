@@ -15,11 +15,8 @@ namespace Dictionary
             {
                 dict.Add(i, i);
             }
-
-            foreach (var item in dict)
-            {
-                Console.WriteLine(item.Key + " " + item.Value);
-            }
+            dict.Remove(11);
+            Console.WriteLine(dict.ContainsKey(153));
             Console.WriteLine(new string('-',30));
             Console.WriteLine(dict.Count);
         }
